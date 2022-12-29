@@ -48,10 +48,6 @@ public enum OkHttpKit {
     /**
      *
      */
-    GET_WITH_BODY(true, "GET"),
-    /**
-     *
-     */
     HEAD(false, "HEAD"),
     /**
      *
