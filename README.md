@@ -5,7 +5,7 @@
 - 哈希接口/集合接口/字符串
 - 类 (class)
 - 日期
-- http请求
+- http请求 (基于 `Apache HttpClient` 和 `OkHttp` )
 - 加解密/哈希/随机字符相关
 - Id生成器
 - 线程
