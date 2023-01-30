@@ -30,12 +30,20 @@
         <p6spy.version>3.9.1</p6spy.version>
         <!-- http类库 -->
         <apache.http.client.version>4.5.14</apache.http.client.version>
+        <codec.version>1.15</codec.version>
         <okhttp.version>4.10.0</okhttp.version>
         <!-- 条码类库 -->
         <zxing.version>3.5.1</zxing.version>
+        <smtp.mail.version>2.0.1</smtp.mail.version>
+        <exchange.mail.version>2.0</exchange.mail.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -44,14 +52,11 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
         <!-- 数据库驱动 - p6spy (用于打印SQL) -->
         <dependency>
             <groupId>p6spy</groupId>
             <artifactId>p6spy</artifactId>
+            <scope>provided</scope>
         </dependency>
         <!-- Http类库 - apache http client -->
         <dependency>
@@ -75,6 +80,24 @@
         <dependency>
             <groupId>com.google.zxing</groupId>
             <artifactId>javase</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!-- 邮件 -->
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>mailapi</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!-- 邮件 SMTP实现 -->
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>smtp</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!-- 邮件 Exchange实现 -->
+        <dependency>
+            <groupId>com.microsoft.ews-java-api</groupId>
+            <artifactId>ews-java-api</artifactId>
             <scope>provided</scope>
         </dependency>
     </dependencies>
@@ -113,7 +136,7 @@
             <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
-                <version>1.15</version>
+                <version>${codec.version}</version>
             </dependency>
             <!-- Http类库 - OkHttp -->
             <dependency>
@@ -132,6 +155,24 @@
                 <groupId>com.google.zxing</groupId>
                 <artifactId>javase</artifactId>
                 <version>${zxing.version}</version>
+            </dependency>
+            <!-- 邮件 -->
+            <dependency>
+                <groupId>com.sun.mail</groupId>
+                <artifactId>mailapi</artifactId>
+                <version>${smtp.mail.version}</version>
+            </dependency>
+            <!-- 邮件 SMTP实现 -->
+            <dependency>
+                <groupId>com.sun.mail</groupId>
+                <artifactId>smtp</artifactId>
+                <version>${smtp.mail.version}</version>
+            </dependency>
+            <!-- 邮件 Exchange实现 -->
+            <dependency>
+                <groupId>com.microsoft.ews-java-api</groupId>
+                <artifactId>ews-java-api</artifactId>
+                <version>${exchange.mail.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
