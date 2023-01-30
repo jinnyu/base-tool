@@ -16,3 +16,7 @@
 ## License
 
 本项目基于 Apache 2.0 协议开源. 详情参见 [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0).
+
+部分代码来自开源项目
+
+- Id工具类 `ObjectId` 来自 [MongoDB官方Java驱动项目](https://github.com/mongodb/mongo-java-driver)
