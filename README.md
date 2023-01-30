@@ -5,7 +5,8 @@
 - 哈希接口/集合接口/字符串
 - 类 (class)
 - 日期
-- http请求 (基于 `Apache HttpClient` 和 `OkHttp` )
+- 邮件 ( `SMTP` / `Exchange` 发送)
+- http请求 (基于 `Apache HttpClient 4` 和 `OkHttp4` )
 - 加解密/哈希/随机字符相关
 - Id生成器
 - 线程
