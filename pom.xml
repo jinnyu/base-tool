@@ -32,6 +32,8 @@
         <apache.http.client.version>4.5.14</apache.http.client.version>
         <codec.version>1.15</codec.version>
         <okhttp.version>4.10.0</okhttp.version>
+        <!-- guava -->
+        <guava.version>31.1-jre</guava.version>
         <!-- 条码类库 -->
         <zxing.version>3.5.1</zxing.version>
         <smtp.mail.version>2.0.1</smtp.mail.version>
@@ -68,6 +70,12 @@
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Google 常用工具集 -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
             <scope>provided</scope>
         </dependency>
         <!-- 二维码 zxing core -->
@@ -143,6 +151,12 @@
                 <groupId>com.squareup.okhttp3</groupId>
                 <artifactId>okhttp</artifactId>
                 <version>${okhttp.version}</version>
+            </dependency>
+            <!-- Google 常用工具集 -->
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
             </dependency>
             <!-- 二维码 zxing core -->
             <dependency>
