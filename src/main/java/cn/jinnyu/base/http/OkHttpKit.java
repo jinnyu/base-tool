@@ -89,41 +89,20 @@ public enum OkHttpKit {
      */
     public static class TraceIdInterceptor implements Interceptor {
 
-        private static final List<String> list = new LinkedList<>();
-
-        static {
-            list.add("traceId");
-            list.add("traceid");
-            list.add("X-USP-TraceId");
-            list.add("X-USP-Trace-Id");
-            list.add("x-usp-traceid");
-            list.add("x-usp-trace-id");
-        }
-
         @NotNull
         @Override
         public Response intercept(@NotNull Chain chain) throws IOException {
-            String  traceId = getTraceIdFromMdc();
+            String  traceId = MDC.get("X-Jinnyu-TraceId");
             Request request = chain.request();
             if (null != traceId && !"".equals(traceId)) {
-                request = chain.request().newBuilder().addHeader("X-USP-Trace-Id", traceId).build();
+                request = chain.request().newBuilder().addHeader("X-Jinnyu-TraceId", traceId).build();
             }
             return chain.proceed(request);
         }
 
         @Override
         public String toString() {
-            return "TraceId Filter";
-        }
-
-        private String getTraceIdFromMdc() {
-            for (String s : list) {
-                String id = MDC.get(s);
-                if (null != id && !"".equals(id)) {
-                    return id;
-                }
-            }
-            return null;
+            return "Jinnyu TraceId Filter";
         }
 
     }
@@ -147,15 +126,16 @@ public enum OkHttpKit {
                 try {
                     return chain.proceed(request);
                 } catch (Exception e) {
+                    exception = e;
                     try {
                         TimeUnit.MILLISECONDS.sleep(pauseMs);
                     } catch (InterruptedException ex) {
-                        exception = e;
+                       // ignore
                     }
-                    log.info("Http请求失败, 当前第{}次重试. {}", i, e.getMessage());
+                    log.warn("Http请求失败, 当前第{}次重试. {}", i, e.getMessage());
                 }
             }
-            throw new RuntimeException("请求失败", exception);
+            throw new RuntimeException("请求失败 " + exception.getMessage(), exception);
         }
 
         @Override

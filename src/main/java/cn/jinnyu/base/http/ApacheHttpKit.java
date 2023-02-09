@@ -19,7 +19,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.client.HttpRequestRetryHandler;
@@ -280,7 +279,7 @@ public enum ApacheHttpKit {
              * <br>
              * 随机模式下为最低暂停时长
              */
-            private int            pauseMs                  = 0;
+            private int            pauseMs                  = 100;
             /**
              * 随机模式下最大等待时长
              * <br>
@@ -357,7 +356,7 @@ public enum ApacheHttpKit {
     }
 
     public enum RetryPauseMode {
-        FIXED, RANDOM
+        NONE, FIXED, RANDOM
     }
 
     // --------------------------------------------------
@@ -375,41 +374,6 @@ public enum ApacheHttpKit {
         builder.setConnectTimeout(config.getConnectionTimeout());
         builder.setConnectionRequestTimeout(config.getConnectionRequestTimeout());
         return builder.build();
-    }
-
-    private static HttpRequestInterceptor toTraceIdInterceptor() {
-        return new InnerTraceIdInterceptor();
-    }
-
-    private static class InnerTraceIdInterceptor implements HttpRequestInterceptor {
-        private static final List<String> list = new LinkedList<>();
-
-        static {
-            list.add("traceId");
-            list.add("traceid");
-            list.add("X-USP-TraceId");
-            list.add("X-USP-Trace-Id");
-            list.add("x-usp-traceid");
-            list.add("x-usp-trace-id");
-        }
-
-        @Override
-        public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
-            String clientTraceId = getTraceIdFromMdc();
-            if (null != clientTraceId && !"".equals(clientTraceId)) {
-                request.addHeader("X-USP-Trace-Id", clientTraceId);
-            }
-        }
-
-        private String getTraceIdFromMdc() {
-            for (String s : list) {
-                String id = MDC.get(s);
-                if (null != id && !"".equals(id)) {
-                    return id;
-                }
-            }
-            return null;
-        }
     }
 
     // --------------------------------------------------
@@ -465,7 +429,12 @@ public enum ApacheHttpKit {
             List<Class<? extends IOException>> classes = Arrays.asList(InterruptedIOException.class, UnknownHostException.class, ConnectException.class, SSLException.class);
             retryHandler = new RetryHandler(config.isRetry(), config.getRetryCount(), config.getRetryPauseMode(), config.getPauseMs(), config.getPauseRandomMaxMs(), classes);
             tokenHandler = new DefaultUserTokenHandler();
-            interceptors.add(toTraceIdInterceptor());
+            interceptors.add((request, context) -> {
+                String clientTraceId = MDC.get("X-Jinnyu-TraceId");
+                if (null != clientTraceId && !"".equals(clientTraceId)) {
+                    request.addHeader("X-Jinnyu-TraceId", clientTraceId);
+                }
+            });
             initFlag.set(true);
         }
         HttpClientBuilder builder = HttpClients.custom();
@@ -522,6 +491,7 @@ public enum ApacheHttpKit {
         }
         if (log.isDebugEnabled()) {
             end = LocalDateTime.now();
+            //noinspection DataFlowIssue
             log.debug("请求耗时 -> {}ms", Duration.between(start, end).toMillis());
         }
         return response;
@@ -715,12 +685,12 @@ public enum ApacheHttpKit {
             }
         }
 
-        private void doSleep(RetryPauseMode mode, int basicTime, int pause) {
+        private void doSleep(RetryPauseMode mode, int sleep, int pause) {
             try {
                 if (RetryPauseMode.RANDOM.equals(mode)) {
-                    TimeUnit.MILLISECONDS.sleep(RANDOM.nextInt(pause) + basicTime);
-                } else {
-                    TimeUnit.MILLISECONDS.sleep(basicTime);
+                    TimeUnit.MILLISECONDS.sleep(RANDOM.nextInt(pause) + sleep);
+                } else if (RetryPauseMode.FIXED.equals(mode)) {
+                    TimeUnit.MILLISECONDS.sleep(sleep);
                 }
             } catch (InterruptedException e) {
                 // ignore
