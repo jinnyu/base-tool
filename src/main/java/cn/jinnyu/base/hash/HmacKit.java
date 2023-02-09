@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.jinnyu.base.digest;
+package cn.jinnyu.base.hash;
 
 import cn.jinnyu.base.codec.CodecKit;
 

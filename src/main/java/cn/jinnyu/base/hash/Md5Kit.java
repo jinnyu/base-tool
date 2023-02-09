@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.jinnyu.base.digest;
+package cn.jinnyu.base.hash;
 
 import cn.jinnyu.base.codec.CodecKit;
 
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -25,21 +24,24 @@ import java.security.NoSuchAlgorithmException;
  * @author jinyu@jinnyu.cn
  * @date 2022-11-28
  */
-public class ShaKit {
+public class Md5Kit {
 
-    public static final String SHA256   = "SHA-256";
-    public static final String SHA512   = "SHA-512";
-    public static final String SHA3_256 = "SHA3-256";
-    public static final String SHA3_512 = "SHA3-512";
+    private static final MessageDigest INSTANCE;
 
-    public String encode(String data, String methodOrKey) throws Exception {
+    static {
         try {
-            MessageDigest digest = MessageDigest.getInstance(methodOrKey);
-            byte[]        bytes  = digest.digest(data.getBytes(StandardCharsets.UTF_8));
-            return CodecKit.byte2hex(bytes);
+            INSTANCE = MessageDigest.getInstance("MD5");
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public String encode(String data) {
+        if (null == data) {
+            return null;
+        }
+        byte[] bytes = INSTANCE.digest(data.getBytes());
+        return CodecKit.byte2hex(bytes);
     }
 
 }
