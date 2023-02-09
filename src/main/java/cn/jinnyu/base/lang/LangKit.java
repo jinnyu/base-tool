@@ -123,7 +123,7 @@ public class LangKit {
     }
 
     public static <T extends RuntimeException> void throwExceptionIfEmpty(String o, T e) {
-        if (isNull(o)) {
+        if (isEmpty(o)) {
             throw e;
         }
     }
