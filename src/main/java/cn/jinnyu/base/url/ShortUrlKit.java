@@ -15,13 +15,23 @@ public enum ShortUrlKit {
 
     ;
 
-    public static String parse(String baseUrl, String raw) {
-        if (isValidUrl(baseUrl) && isValidUrl(raw)) {
-            long   hash    = hash(raw);
-            String shorted = to62Bit(hash);
-            return formatShortUrl(baseUrl, shorted);
+    public static String toHash(String raw) {
+        return to62Bit(hashRawData(raw));
+    }
+
+    public static String toShort(String baseUrl, String raw) {
+        return toShort(true, baseUrl, raw);
+    }
+
+    public static String toShort(boolean validUrl, String baseUrl, String raw) {
+        if (validUrl) {
+            if (!(isValidUrl(baseUrl) || isValidUrl(raw))) {
+                throw new RuntimeException("Base url or input url incorrect!");
+            }
         }
-        throw new RuntimeException("Base url or input url incorrect!");
+        long   hash    = hashRawData(raw);
+        String shorted = to62Bit(hash);
+        return formatShortUrl(baseUrl, shorted);
     }
 
     private static boolean isValidUrl(String s) {
@@ -33,7 +43,7 @@ public enum ShortUrlKit {
         }
     }
 
-    private static long hash(String data) {
+    private static long hashRawData(String data) {
         return Hashing.murmur3_128().hashBytes(data.getBytes(StandardCharsets.UTF_8)).asLong();
     }
 
