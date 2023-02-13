@@ -6,7 +6,7 @@
 
     <groupId>cn.jinnyu</groupId>
     <artifactId>base-tool</artifactId>
-    <version>1.0.1</version>
+    <version>1.1.0</version>
 
     <name>base-tool</name>
     <description>常用基础类库</description>
