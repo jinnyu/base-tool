@@ -29,7 +29,7 @@ public enum ShortUrlKit {
                 throw new RuntimeException("Base url or input url incorrect!");
             }
         }
-        long   hash    = hashRawData(raw);
+        int    hash    = hashRawData(raw);
         String shorted = to62Bit(hash);
         return formatShortUrl(baseUrl, shorted);
     }
@@ -43,11 +43,11 @@ public enum ShortUrlKit {
         }
     }
 
-    private static long hashRawData(String data) {
-        return Hashing.murmur3_128().hashBytes(data.getBytes(StandardCharsets.UTF_8)).asLong();
+    private static int hashRawData(String data) {
+        return Hashing.murmur3_128().hashBytes(data.getBytes(StandardCharsets.UTF_8)).asInt();
     }
 
-    private static String to62Bit(long uniqueId) {
+    private static String to62Bit(int uniqueId) {
         return CodecKit.toOtherSystemNumber(uniqueId, 62);
     }
 
