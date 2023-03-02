@@ -60,9 +60,9 @@ public enum RsaKit {
      * 生成公匙和私匙
      *
      * @param keySize key大小 1024-65536 & 64的倍数
-     * @return { "public-key": RSAPublicKey对象, "private-key": RSAPrivateKey对象 }
+     * @return keypair
      */
-    public static Map<String, Key> getKeys(int keySize) {
+    public static KeyPair initKey(int keySize) {
         try {
             // 1024-65536 & 64的倍数
             if (keySize < KEY_SIZE_MIN || keySize > KEY_SIZE_MAX || keySize % DOUBLE_OF_64 != 0) {
@@ -70,16 +70,24 @@ public enum RsaKit {
             }
             KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
             keyPairGenerator.initialize(keySize, RANDOM);
-            KeyPair          keyPair    = keyPairGenerator.generateKeyPair();
-            RSAPublicKey     publicKey  = (RSAPublicKey) keyPair.getPublic();
-            RSAPrivateKey    privateKey = (RSAPrivateKey) keyPair.getPrivate();
-            Map<String, Key> map        = new HashMap<>(4);
-            map.put(PUBLIC, publicKey);
-            map.put(PRIVATE, privateKey);
-            return map;
+            return keyPairGenerator.generateKeyPair();
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * 生成公匙和私匙
+     *
+     * @param keySize key大小 1024-65536 & 64的倍数
+     * @return { "public-key": RSAPublicKey对象, "private-key": RSAPrivateKey对象 }
+     */
+    public static Map<String, Key> initKeyMap(int keySize) {
+        KeyPair          keyPair = initKey(keySize);
+        Map<String, Key> map     = new HashMap<>(4);
+        map.put(PUBLIC, keyPair.getPublic());
+        map.put(PRIVATE, keyPair.getPublic());
+        return map;
     }
 
     public static String key2Str(Key key) {
