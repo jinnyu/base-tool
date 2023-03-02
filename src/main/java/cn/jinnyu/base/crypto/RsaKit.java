@@ -62,7 +62,7 @@ public enum RsaKit {
      * @param keySize key大小 1024-65536 & 64的倍数
      * @return { "public-key": RSAPublicKey对象, "private-key": RSAPrivateKey对象 }
      */
-    public Map<String, Key> getKeys(int keySize) {
+    public static Map<String, Key> getKeys(int keySize) {
         try {
             // 1024-65536 & 64的倍数
             if (keySize < KEY_SIZE_MIN || keySize > KEY_SIZE_MAX || keySize % DOUBLE_OF_64 != 0) {
@@ -82,7 +82,7 @@ public enum RsaKit {
         }
     }
 
-    public String key2Str(Key key) {
+    public static String key2Str(Key key) {
         return Base64.getEncoder().encodeToString(key.getEncoded());
     }
 
@@ -165,11 +165,11 @@ public enum RsaKit {
         }
     }
 
-    public String createBase64Sign(String source, PrivateKey privateKey) {
+    public static String createBase64Sign(String source, PrivateKey privateKey) {
         return Base64.getEncoder().encodeToString(createSignByte(source, privateKey));
     }
 
-    public byte[] createSignBytes(String source, PrivateKey privateKey) {
+    public static byte[] createSignBytes(String source, PrivateKey privateKey) {
         return createSignByte(source, privateKey);
     }
 
@@ -180,7 +180,7 @@ public enum RsaKit {
      * @param privateKey 私匙
      * @return 签名
      */
-    public byte[] createSignByte(String source, PrivateKey privateKey) {
+    public static byte[] createSignByte(String source, PrivateKey privateKey) {
         try {
             Signature signet = Signature.getInstance(SIGN_TYPE);
             signet.initSign(privateKey);
@@ -191,7 +191,7 @@ public enum RsaKit {
         }
     }
 
-    public boolean checkBase64Sign(String source, String sign, PublicKey publicKey) {
+    public static boolean checkBase64Sign(String source, String sign, PublicKey publicKey) {
         return checkSignBytes(source, Base64.getDecoder().decode(sign), publicKey);
     }
 
@@ -203,7 +203,7 @@ public enum RsaKit {
      * @param publicKey 公匙
      * @return 是否匹配
      */
-    public boolean checkSignBytes(String source, byte[] sign, PublicKey publicKey) {
+    public static boolean checkSignBytes(String source, byte[] sign, PublicKey publicKey) {
         try {
             Signature signetCheck = Signature.getInstance(SIGN_TYPE);
             signetCheck.initVerify(publicKey);
