@@ -24,7 +24,9 @@ import java.security.NoSuchAlgorithmException;
  * @author jinyu@jinnyu.cn
  * @date 2022-11-28
  */
-public class Md5Kit {
+public enum Md5Kit {
+
+    ;
 
     private static final MessageDigest INSTANCE;
 
@@ -36,7 +38,7 @@ public class Md5Kit {
         }
     }
 
-    public String encode(String data) {
+    public static String encode(String data) {
         if (null == data) {
             return null;
         }

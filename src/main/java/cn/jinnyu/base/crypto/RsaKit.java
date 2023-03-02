@@ -41,11 +41,11 @@ public enum RsaKit {
 
     private static final SecureRandom RANDOM = new SecureRandom();
 
-    public String encrypt(String data, String key, Object other) throws Exception {
+    public static String encrypt(String data, String key, Object other) throws Exception {
         return encode(data, str2PublicKey(key));
     }
 
-    public String decrypt(String data, String key, Object other) throws Exception {
+    public static String decrypt(String data, String key, Object other) throws Exception {
         return decode(data, str2PrivateKey(key));
     }
 
@@ -86,7 +86,7 @@ public enum RsaKit {
         return Base64.getEncoder().encodeToString(key.getEncoded());
     }
 
-    public RSAPublicKey str2PublicKey(String key) {
+    public static RSAPublicKey str2PublicKey(String key) {
         try {
             byte[]             keyBytes   = Base64.getDecoder().decode(key.getBytes());
             X509EncodedKeySpec keySpec    = new X509EncodedKeySpec(keyBytes);
@@ -97,7 +97,7 @@ public enum RsaKit {
         }
     }
 
-    public RSAPrivateKey str2PrivateKey(String key) {
+    public static RSAPrivateKey str2PrivateKey(String key) {
         try {
             byte[]              keyBytes   = Base64.getDecoder().decode(key.getBytes());
             PKCS8EncodedKeySpec keySpec    = new PKCS8EncodedKeySpec(keyBytes);
@@ -115,7 +115,7 @@ public enum RsaKit {
      * @param publicKey 公匙
      * @return 加密后的内容
      */
-    private String encode(String source, RSAPublicKey publicKey) {
+    private static String encode(String source, RSAPublicKey publicKey) {
         try {
             Cipher cipher = Cipher.getInstance("RSA");
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
@@ -133,7 +133,7 @@ public enum RsaKit {
      * @param privateKey 私匙
      * @return 解密后的内容
      */
-    private String decode(String source, RSAPrivateKey privateKey) {
+    private static String decode(String source, RSAPrivateKey privateKey) {
         try {
             Cipher cipher = Cipher.getInstance("RSA");
             cipher.init(Cipher.DECRYPT_MODE, privateKey);
@@ -144,7 +144,7 @@ public enum RsaKit {
         }
     }
 
-    private byte[] codec(Cipher cipher, int mode, byte[] data, int keySize) {
+    private static byte[] codec(Cipher cipher, int mode, byte[] data, int keySize) {
         int    maxBlock = mode == Cipher.ENCRYPT_MODE ? keySize / 8 - 11 : keySize / 8;
         int    offset   = 0, i = 0;
         byte[] cache;

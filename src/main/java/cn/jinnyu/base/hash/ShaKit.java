@@ -25,14 +25,16 @@ import java.security.NoSuchAlgorithmException;
  * @author jinyu@jinnyu.cn
  * @date 2022-11-28
  */
-public class ShaKit {
+public enum ShaKit {
+
+    ;
 
     public static final String SHA256   = "SHA-256";
     public static final String SHA512   = "SHA-512";
     public static final String SHA3_256 = "SHA3-256";
     public static final String SHA3_512 = "SHA3-512";
 
-    public String encode(String data, String methodOrKey) throws Exception {
+    public static String encode(String data, String methodOrKey) throws Exception {
         try {
             MessageDigest digest = MessageDigest.getInstance(methodOrKey);
             byte[]        bytes  = digest.digest(data.getBytes(StandardCharsets.UTF_8));

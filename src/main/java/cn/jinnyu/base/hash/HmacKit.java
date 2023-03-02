@@ -25,7 +25,9 @@ import java.nio.charset.StandardCharsets;
  * @author jinyu@jinnyu.cn
  * @date 2022-11-28
  */
-public class HmacKit {
+public enum HmacKit {
+
+    ;
 
     public static final String HMAC_MD5     = "HmacMD5";
     public static final String HMAC_SHA_1   = "HmacSHA1";
@@ -41,11 +43,11 @@ public class HmacKit {
      * @param key  加密密匙
      * @return 加密后的串
      */
-    public String encode(String data, String key) throws Exception {
+    public static String encode(String data, String key) throws Exception {
         return encode(HMAC_SHA_512, data, key);
     }
 
-    public String encode(String method, String data, String key) throws Exception {
+    public static String encode(String method, String data, String key) throws Exception {
         SecretKeySpec signingKey = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), method);
         Mac           mac        = Mac.getInstance(method);
         mac.init(signingKey);

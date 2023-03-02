@@ -65,14 +65,14 @@ public enum AesKit {
         return IvMode.BASE64.equals(mode) ? Base64.getEncoder().encodeToString(bytes) : CodecKit.byte2hex(bytes);
     }
 
-    public String encrypt(String data, String key, Map<String, Object> iv) throws Exception {
+    public static String encrypt(String data, String key, Map<String, Object> iv) throws Exception {
         if (null == data || null == key) {
             throw new IllegalArgumentException("data or key can not be null!");
         }
         return doAes(data, ActionMode.ENCRYPT, key, (String) iv.get(IV), (IvMode) iv.get(IV_MODE));
     }
 
-    public String decrypt(String data, String key, Object other) throws Exception {
+    public static String decrypt(String data, String key, Object other) throws Exception {
         if (null == data || null == key) {
             throw new IllegalArgumentException("data or key can not be null!");
         }
