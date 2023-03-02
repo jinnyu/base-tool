@@ -51,6 +51,8 @@ public enum AesKit {
     public static final String IV      = "iv";
     public static final String IV_MODE = "iv-mode";
 
+    private static final String iv = iv("%hPgOhPRCok#hQsWhArUCe3g", 256, IvMode.HEX);
+
     /**
      * 生成偏移向量
      *
@@ -65,6 +67,13 @@ public enum AesKit {
         return IvMode.BASE64.equals(mode) ? Base64.getEncoder().encodeToString(bytes) : CodecKit.byte2hex(bytes);
     }
 
+    public static String encrypt(String data, String key) throws Exception {
+        if (null == data || null == key) {
+            throw new IllegalArgumentException("data or key can not be null!");
+        }
+        return doAes(data, ActionMode.ENCRYPT, key, iv, IvMode.HEX);
+    }
+
     public static String encrypt(String data, String key, Map<String, Object> iv) throws Exception {
         if (null == data || null == key) {
             throw new IllegalArgumentException("data or key can not be null!");
@@ -72,12 +81,18 @@ public enum AesKit {
         return doAes(data, ActionMode.ENCRYPT, key, (String) iv.get(IV), (IvMode) iv.get(IV_MODE));
     }
 
-    public static String decrypt(String data, String key, Object other) throws Exception {
+    public static String decrypt(String data, String key) throws Exception {
         if (null == data || null == key) {
             throw new IllegalArgumentException("data or key can not be null!");
         }
-        Map<String, Object> map = (Map<String, Object>) other;
-        return doAes(data, ActionMode.DECRYPT, key, (String) map.get(IV), (IvMode) map.get(IV_MODE));
+        return doAes(data, ActionMode.DECRYPT, key, iv, IvMode.HEX);
+    }
+
+    public static String decrypt(String data, String key, Map<String, Object> iv) throws Exception {
+        if (null == data || null == key) {
+            throw new IllegalArgumentException("data or key can not be null!");
+        }
+        return doAes(data, ActionMode.DECRYPT, key, (String) iv.get(IV), (IvMode) iv.get(IV_MODE));
     }
 
     private static byte[] decodeIv(String iv, IvMode mode) {
