@@ -86,7 +86,7 @@ public enum RsaKit {
         KeyPair          keyPair = initKey(keySize);
         Map<String, Key> map     = new HashMap<>(4);
         map.put(PUBLIC, keyPair.getPublic());
-        map.put(PRIVATE, keyPair.getPublic());
+        map.put(PRIVATE, keyPair.getPrivate());
         return map;
     }
 
